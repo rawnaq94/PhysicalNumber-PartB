@@ -2,12 +2,12 @@
 #ifndef PHYSICALNUMBER_H
 #define PHYSICALNUMBER_H
 #include "Unit.h"
-
 using namespace std;
+
 
 namespace ariel 
 {
-
+    static string const arr[]={"km", "cm", "m", "kg", "g", "ton", "hour", "min", "sec"};
     class PhysicalNumber
     {
     
@@ -54,6 +54,10 @@ namespace ariel
 	private:
                 double number;
 	        Unit _x;
+	    
+	 
+	double conversion(PhysicalNumber& a, PhysicalNumber& b)const;
+        friend istream& unit_Input(istream& is, PhysicalNumber& n);   
     };
 }
 #endif
