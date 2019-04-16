@@ -318,8 +318,8 @@ else
     is.clear(errorState);
     return is;
 }
-p1._x=type;
-p1.number=Value;
+c._x=type;
+c.number=Value;
 return is;
 }
 
