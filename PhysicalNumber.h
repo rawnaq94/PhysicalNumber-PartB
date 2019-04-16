@@ -61,14 +61,15 @@ namespace ariel
         friend istream& operator>> (istream& is, PhysicalNumber& c);    
         friend ostream& operator<< (ostream& os, const PhysicalNumber& c);
    
+	    // private paramtres
 	    
 	private:
         double number;
 	Unit _x;
         
-
+           // private func
   
-        double conversion(PhysicalNumber& a ,PhysicalNumber& b)const;
+        double conversion(PhysicalNumber& a ,PhysicalNumber& b)const; // Option to convert
         friend istream& unitInput(istream& is, PhysicalNumber& n);
         bool unit2(const PhysicalNumber& a);
 
