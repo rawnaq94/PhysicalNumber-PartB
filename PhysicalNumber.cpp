@@ -302,14 +302,14 @@ catch(std::exception& pn)
     return is;
 }
 if(_type.compare("km")==0) type=Unit::KM; 
-else if(type.compare("m")==0) type=Unit::M; 
-else if(type.compare("cm")==0) type=Unit::CM; 
-else if(type.compare("ton")==0) type=Unit::TON; 
-else if(type.compare("kg")==0) type=Unit::KG; 
-else if(type.compare("g")==0) type=Unit::G; 
-else if(type.compare("hour")==0) type=Unit::HOUR; 
-else if(type.compare("min")==0) type=Unit::MIN; 
-else if(type.compare("sec")==0) type=Unit::SEC;
+else if(_type.compare("m")==0) type=Unit::M; 
+else if(_type.compare("cm")==0) type=Unit::CM; 
+else if(_type.compare("ton")==0) type=Unit::TON; 
+else if(_type.compare("kg")==0) type=Unit::KG; 
+else if(_type.compare("g")==0) type=Unit::G; 
+else if(_type.compare("hour")==0) type=Unit::HOUR; 
+else if(_type.compare("min")==0) type=Unit::MIN; 
+else if(_type.compare("sec")==0) type=Unit::SEC;
 else 
 {
     auto errorState=is.rdstate(); 
