@@ -1,164 +1,229 @@
-#include "PhysicalNumber.h"
+// Full realization ---- Part2 
+
 #include <iostream>
+#include "PhysicalNumber.h"
 #include<exception>
 #include <math.h> 
 using namespace std;
 using namespace ariel;
 
-    //constructors
-    PhysicalNumber::PhysicalNumber(const double number,const Unit unit){
-         this->u=unit;
-        this->num=number;
+
+
+      // copy constructor
+
+    PhysicalNumber::PhysicalNumber(const double num,const Unit x)
+    {
+	 this->number=num;
+         this->_x=x;
     }
-    PhysicalNumber::PhysicalNumber(const PhysicalNumber& pn){
-        this->u=pn.u;
-        this->num=pn.num;
+
+
+    PhysicalNumber::PhysicalNumber(const PhysicalNumber& p1)
+    {
+        this->number=p1.number;
+        this->_x=p1._x;
     }
     
-    //A+B
-     PhysicalNumber PhysicalNumber::operator+(const PhysicalNumber& p1)const{
-        //check if there is a reason to throw and exception
-        PhysicalNumber thispn =PhysicalNumber(this->num,this->u);
-        if(thispn.sameUnit(p1)==false) throw runtime_error("not the same family unit can not convert18");
-        
-        PhysicalNumber pn =PhysicalNumber(p1.num,p1.u);
-        double new_value= thispn.num + unit_Converter(thispn,pn);
-        return PhysicalNumber(new_value,u);
-        
-    }
-    //A-B
-	 PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber& p1)const{
-        //check if there is a reason to throw and exception
-	    PhysicalNumber thispn =PhysicalNumber(this->num,this->u);
 
-       if(thispn.sameUnit(p1)==false) throw runtime_error("not the same family unit can not convert19");
-        
-        PhysicalNumber pn =PhysicalNumber(p1.num,p1.u);
-        double new_value= this->num-1*(unit_Converter(thispn,pn));
-      
-        return PhysicalNumber(new_value,u);
-       
-	}
-    //A=A+B
-	PhysicalNumber& PhysicalNumber::operator+=(const PhysicalNumber &p1){
-      PhysicalNumber pn =(*this+p1); //using +operator we wrote
-      this->num =pn.num;
-     
-        return *this;
-	}
-    //A=A-B
-	PhysicalNumber& PhysicalNumber::operator-=(const PhysicalNumber &p1){
-        PhysicalNumber pn =(*this-p1);//using -operator we wrote
-        
-        this->num =pn.num;
-        
-        return *this;	
-    }
-    PhysicalNumber& PhysicalNumber::operator=(const PhysicalNumber& p1){
-        this->num = p1.num;
-        this->u =p1.u;
-        return *this;
-    }
+        // onry operator + && onry operator -
 
-    //+A
-     PhysicalNumber PhysicalNumber::operator+()const{// Unari
-        if(this->num <0){
-            return PhysicalNumber(num*(-1),u);
+     PhysicalNumber PhysicalNumber::operator+()const
+     {
+        if(this->number < 0)
+	{
+            return PhysicalNumber(number*(-1),_x);
         }
         else
         return *this;
-    }
-    //-A 
-	 PhysicalNumber PhysicalNumber::operator-()const{// Unari
-
-            return PhysicalNumber(num*(-1),u); //the num turns minus signed
-    } 
-
-    bool PhysicalNumber::operator>(const PhysicalNumber &other){
-        //check if there is a reason to throw and exception
-        if(this->sameUnit(other)==false) throw runtime_error("not the same family unit can not convert40");        
-            PhysicalNumber p1=PhysicalNumber(this->num,this->u);
-            PhysicalNumber p2=PhysicalNumber(other.num,other.u);
-            double ans=unit_Converter(p1,p2);
-            return (this->num>ans) ;         
-    }
-
-    bool PhysicalNumber::operator<(const PhysicalNumber& other){
-        //check if there is a reason to throw and exception
-        if(this->sameUnit(other)==false) throw runtime_error("not the same family unit can not convert45");
-        
-            PhysicalNumber p1=PhysicalNumber(this->num,this->u);
-            PhysicalNumber p2=PhysicalNumber(other.num,other.u);
-            double ans=unit_Converter(p1,p2);
-            return (this->num<ans);
-        
-    }
-    bool PhysicalNumber::operator>=(const PhysicalNumber& other){
-        //check if there is a reason to throw and exception
-        if(this->sameUnit(other)==false)throw runtime_error("not the same family unit can not convert44");
-            PhysicalNumber p1=PhysicalNumber(this->num,this->u);
-            PhysicalNumber p2=PhysicalNumber(other.num,other.u);
-            if(p1>p2 || p1==p2){
-                return true;
-            }
-            else
-            return false;
+     }
      
+     PhysicalNumber PhysicalNumber::operator-()const
+     {
+
+         return PhysicalNumber(number*(-1),_x); 
+     } 
+
+
+
+         // operator (+, +=) && operator (-, _=) && operator (==)
+
+     PhysicalNumber PhysicalNumber::operator+(const PhysicalNumber& a)const
+     {
+        PhysicalNumber thispn = PhysicalNumber(this->number,this->_x);
+        if(thispn.unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber tx =PhysicalNumber(a.number,a._x);
+        double temp= thispn.number + conversion(thispn,tx);
+        return PhysicalNumber(temp,_x);
+     }
+    
+
+    PhysicalNumber PhysicalNumber::operator-(const PhysicalNumber& a)const
+    {
+        PhysicalNumber thispn = PhysicalNumber(this->number,this->_x);
+        if(thispn.unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber tx = PhysicalNumber(a.number,a._x);
+        double temp = this->number-1*(conversion(thispn,tx));
+        return PhysicalNumber(temp,_x);       
     }
-    bool PhysicalNumber::operator<=(const PhysicalNumber& other){
-        //check if there is a reason to throw and exception
-        
-        if(this->sameUnit(other)==false) throw runtime_error("not the same family unit can not convert43");
-            PhysicalNumber p1=PhysicalNumber(this->num,this->u);
-            PhysicalNumber p2=PhysicalNumber(other.num,other.u);
-            if(p1 == p2 || p1<p2){
-               return true;
-            }
-            else
-            return false;
-        
-    }
-    bool PhysicalNumber::operator==(const PhysicalNumber& num2){
-        //check if there is a reason to throw and exception
-        if(this->sameUnit(num2)==false) throw runtime_error("not the same family unit can not convert41");
-        
-            PhysicalNumber p1=PhysicalNumber(this->num,this->u);
-            PhysicalNumber p2=PhysicalNumber(num2.num,num2.u);
-            if(p1>p2 || p1<p2){
-                return false;
-            }
-            else
-            return true;
-        
-    }
-    bool PhysicalNumber::operator!=(const PhysicalNumber& other){ //using == operator
-       if(*this==other) return false;
-       return true;
-    }
-    //++A
-    PhysicalNumber PhysicalNumber::operator++(){//++i first add and then print
-        num++;
-	    return *this;
-    }
-    //++A
-    PhysicalNumber PhysicalNumber::operator++(int){//i++ first print and then add
-        PhysicalNumber pn(*this);
-        num++;
-        return pn;
-    }
-    //--A
-    PhysicalNumber PhysicalNumber::operator--(){//--i first subtracting and then print
-        num--;
-        return *this;
-    }
-    //A--
-    PhysicalNumber PhysicalNumber::operator--(int){//i-- firts print and then subtracting
-        PhysicalNumber pn(*this);
-        num--;
-        
-     return pn;
+
+
+ 
+    PhysicalNumber& PhysicalNumber::operator+=(const PhysicalNumber &a)
+    {
+      PhysicalNumber tx = (*this+a);
+      this->number =tx.number;
+      return *this;
     }
     
+
+
+    PhysicalNumber& PhysicalNumber::operator-=(const PhysicalNumber &a)
+    {
+        PhysicalNumber tx = (*this-a);
+        this->number = tx.number;
+        return *this;	
+    }
+
+
+    PhysicalNumber& PhysicalNumber::operator=(const PhysicalNumber& a)
+    {
+        this->number = a.number;
+        this->_x =a._x;
+        return *this;
+    }
+
+
+    
+           // check equal by boolean operator
+
+
+   bool PhysicalNumber::operator==(const PhysicalNumber& a)
+    {
+        if(this->unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber b = PhysicalNumber(this->number,this->_x);
+        PhysicalNumber c = PhysicalNumber(a.number,a._x);
+        if(b>c || b<c)
+	{
+            return false;
+        }
+        else
+            return true;
+   }
+
+
+   bool PhysicalNumber::operator!=(const PhysicalNumber& a)
+   {
+       if(*this==a) return false;
+       return true;
+    }
+
+
+    bool PhysicalNumber::operator>(const PhysicalNumber &a)
+    {
+        if(this->unit2(a)==false)
+	{
+		throw runtime_error("Can not convert"); 
+	}
+        PhysicalNumber b = PhysicalNumber(this->number,this->_x);
+        PhysicalNumber c = PhysicalNumber(a.number,a._x);
+        double our = conversion(b,c);
+        return (this->number>our);         
+    }
+
+
+    bool PhysicalNumber::operator<(const PhysicalNumber& a)
+    {
+        if(this->unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber b = PhysicalNumber(this->number,this->_x);
+	PhysicalNumber c = PhysicalNumber(a.number,a._x);
+        double our = conversion(b,c);
+        return (this->number<our);
+    }
+
+
+    bool PhysicalNumber::operator>=(const PhysicalNumber& a)
+    {
+        if(this->unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber b = PhysicalNumber(this->number,this->_x);
+        PhysicalNumber c = PhysicalNumber(a.number,a._x);
+        if(b>c || b==c)
+	{
+            return true;
+        }
+        else
+            return false;
+    }
+
+
+
+    bool PhysicalNumber::operator<=(const PhysicalNumber& a)
+    {
+        if(this->unit2(a)==false)
+	{
+		throw runtime_error("Can not convert");
+	}
+        PhysicalNumber b = PhysicalNumber(this->number,this->_x);
+        PhysicalNumber c = PhysicalNumber(a.number,a._x);
+        if(b==c || b<c)
+	{
+            return true;
+        }
+        else
+            return false;
+    }
+
+
+ 
+
+  // promotion and subtraction operator
+
+
+ PhysicalNumber PhysicalNumber::operator++(int)
+ {
+        PhysicalNumber p1(*this);
+        number++;
+        return p1;
+ }
+
+PhysicalNumber PhysicalNumber::operator++()
+{
+	number++;
+	return *this;
+}
+
+PhysicalNumber PhysicalNumber::operator--(int)
+{
+        PhysicalNumber p1(*this);
+        number--;
+        return p1;
+}   
+   
+PhysicalNumber PhysicalNumber::operator--()
+{
+        number--;
+        return *this;
+}
+
+
+
+
+        // input && output
+
    ostream &ariel::operator<< (ostream& os, const PhysicalNumber& c){//output
     PhysicalNumber pn (c.num,c.u);
     string str;
