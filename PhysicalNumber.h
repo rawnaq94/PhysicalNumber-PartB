@@ -2,54 +2,78 @@
 #define PHYSICALNUMBER_H
 #include <iostream>
 #include "Unit.h"
-
 using namespace std;
 
-namespace ariel {
-static string const endings[] = {"km","m","cm","hour","min","sec","ton","kg","g"};
-class PhysicalNumber{
-    private:
-    Unit u;
-    double num;
+
+namespace ariel
+{
+	
+    static string const arr[] = {"km", "cm", "m", "kg", "g", "ton", "hour", "min", "sec"};
+	
+    class PhysicalNumber
+    {
+
+        public:
+	    
+	    //consts && setres
+	    
+        PhysicalNumber(const double num,const Unit x);
+        PhysicalNumber(const PhysicalNumber& p1);
+        void setNumber(double n);
+        void setUnit(Unit _x);
+	    
+	    
+	    // onry operator
+            
+        PhysicalNumber operator+()const;
+        PhysicalNumber operator-()const;
+	    
+	    // operator (+) && operator (-)
+
+        PhysicalNumber operator+(const PhysicalNumber& a)const; 
+	PhysicalNumber operator-(const PhysicalNumber& a)const;
+	PhysicalNumber& operator+=(const PhysicalNumber& a);
+	PhysicalNumber& operator-=(const PhysicalNumber& a);
+	PhysicalNumber& operator=(const PhysicalNumber& a);
+
+      
+	    // check equal by boolean operator
+
+        bool operator> (const PhysicalNumber& a) ;
+        bool operator< (const PhysicalNumber& a) ;
+        bool operator>= (const PhysicalNumber& a) ;
+        bool operator<= (const PhysicalNumber& a) ;
+        bool operator== (const PhysicalNumber& a) ;
+        bool operator!= (const PhysicalNumber& a) ;
+	    
+	    
+	     // promotion and subtraction operator
+       
+	PhysicalNumber operator++(int i);
+        PhysicalNumber operator++();
+        PhysicalNumber operator--(int i);
+        PhysicalNumber operator--();
+	    
+
+	    // input && output
+    
+        friend istream& operator>> (istream& is, PhysicalNumber& c);    
+        friend ostream& operator<< (ostream& os, const PhysicalNumber& c);
+   
+	    
+	private:
+        double number;
+	Unit _x;
+        
 
   
-    double unit_Converter(PhysicalNumber& p1 ,PhysicalNumber& p2)const;
-    friend istream& checkInputUnit(istream& is, PhysicalNumber& pn);
-    bool sameUnit(const PhysicalNumber& p1);
+        double conversion(PhysicalNumber& a ,PhysicalNumber& b)const;
+        friend istream& unitInput(istream& is, PhysicalNumber& n);
+        bool unit2(const PhysicalNumber& a);
 
-    public:
-    PhysicalNumber(const double number,const Unit unit);//consts 2
-    PhysicalNumber(const PhysicalNumber& pn);
-    void setData(double d);
-    void setUnit(Unit u);
-
-    PhysicalNumber operator+(const PhysicalNumber& p1)const; 
-	PhysicalNumber operator-(const PhysicalNumber& p1)const;
-	PhysicalNumber& operator+=(const PhysicalNumber& p1);
-	PhysicalNumber& operator-=(const PhysicalNumber& p1);
-	PhysicalNumber& operator=(const PhysicalNumber& p1);
-
-    PhysicalNumber operator+()const; // Unari
-	PhysicalNumber operator-()const; // Unari
-
-    bool operator> (const PhysicalNumber& p1) ;
-    bool operator< (const PhysicalNumber& p1) ;
-    bool operator>= (const PhysicalNumber& p1) ;
-    bool operator<= (const PhysicalNumber& p1) ;
-    bool operator== (const PhysicalNumber& p1) ;
-    bool operator!= (const PhysicalNumber& p1) ;
-
-    PhysicalNumber operator++();//++i
-    PhysicalNumber operator++(int i);//i++
-    PhysicalNumber operator--();//--i
-    PhysicalNumber operator--(int i);//i--
-    
-    
-    friend ostream& operator<< (ostream& os, const PhysicalNumber& c);//output
-    friend istream& operator>> (istream& is, PhysicalNumber& c);//input
-   
     };
-     ostream& operator<< (ostream& os, const PhysicalNumber& c);//output
-     istream& operator>> (istream& is, PhysicalNumber& c);//input
+	
+       istream& operator>> (istream& is, PhysicalNumber& c);    
+       ostream& operator<< (ostream& os, const PhysicalNumber& c);
 }
 #endif
