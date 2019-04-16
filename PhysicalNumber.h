@@ -17,32 +17,41 @@ namespace ariel
 	    
 	    // onry operator
             
-        PhysicalNumber operator+();
-        PhysicalNumber operator-();
+        PhysicalNumber operator+()const;
+        PhysicalNumber operator-()const;
+	    
+	    // consts && setres
+	    
+	PhysicalNumber(const double num, const Unit x);
+	PhysicalNumber(cost PhysicalNumber& p1);
+	void setNumber(double n);
+	void setUnit(Unit _x);
 	    
            // operator (+) && operator (-)
 
-        const PhysicalNumber operator+(const PhysicalNumber&); 
-	const PhysicalNumber operator-(const PhysicalNumber&);
-	PhysicalNumber& operator+=(const PhysicalNumber&);
-	PhysicalNumber& operator-=(const PhysicalNumber&);
+        PhysicalNumber operator+(const PhysicalNumber& a)const; 
+	PhysicalNumber operator-(const PhysicalNumber& a)const;
+	PhysicalNumber& operator+=(const PhysicalNumber& a);
+	PhysicalNumber& operator-=(const PhysicalNumber& a);
+	PhysicalNumber& operator=(const PhysicalNumber& a);
 	
 
 	   // check equal by boolean operator
 	    
-        bool operator== (const PhysicalNumber&);
-        bool operator!= (const PhysicalNumber&);
-	bool operator> (const PhysicalNumber&);
-        bool operator< (const PhysicalNumber&);
-        bool operator>= (const PhysicalNumber&);
-        bool operator<= (const PhysicalNumber&);
+	friend bool unit2(const PhysicalNumber& a, const PhysicalNumber& b);    
+        friend bool operator== (const PhysicalNumber& a, const PhysicalNumber& b);
+        bool operator!= (const PhysicalNumber& a);
+	bool operator> (const PhysicalNumber& a);
+        bool operator< (const PhysicalNumber& a);
+        bool operator>= (const PhysicalNumber& a);
+        bool operator<= (const PhysicalNumber& a);
         
       
 	   // promotion and subtraction operator
 	    
-        PhysicalNumber operator++(int);
+        PhysicalNumber operator++(int i); 
         PhysicalNumber operator++();
-        PhysicalNumber operator--(int);
+        PhysicalNumber operator--(int i);
         PhysicalNumber operator--();
     
            // input && output
@@ -59,5 +68,13 @@ namespace ariel
 	double conversion(PhysicalNumber& a, PhysicalNumber& b)const;
         friend istream& unit_Input(istream& is, PhysicalNumber& n);   
     };
+	
+	
+	istream& operator>> (istream& is, PhysicalNumber& c);
+	ostream& operator<< (ostream& os, const PhysicalNumber& c);
+	bool operator== (const PhysicalNumber& a, const PhysicalNumber& b);
+        bool unit2(const PhysicalNumber& a, const PhysicalNumber& b); 
+	
+	
 }
 #endif
