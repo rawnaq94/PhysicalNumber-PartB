@@ -224,308 +224,314 @@ PhysicalNumber PhysicalNumber::operator--()
 
         // input && output
 
-   ostream &ariel::operator<< (ostream& os, const PhysicalNumber& c){//output
-    PhysicalNumber pn (c.num,c.u);
-    string str;
-    switch (pn.u) {
+   ostream &ariel::operator<< (ostream& os, const PhysicalNumber& c)
+   {
+      PhysicalNumber p1 (c.number,c._x);
+      string cd;
+      switch (p1._x) {
         case Unit::KM :
-            str = "km";
+            cd="km";
             break;
-        case Unit::M :
-            str = "m";
-            break;
+	
         case Unit::CM :
-            str = "cm";
+            cd="cm";
+            break;	      
+		      
+        case Unit::M :
+            cd="m";
             break;
-        case Unit::HOUR :
-            str = "hour";
+		    
+	case Unit::KG :
+            cd="kg";
             break;
-        case Unit::MIN :
-            str = "min";
-            break;
-        case Unit::SEC :
-            str = "sec";
-            break;
-        case Unit::TON :
-            str = "ton";
-            break;
-        case Unit::KG :
-            str = "kg";
-            break;
+		    
         case Unit::G :
-            str = "g";
+            cd="g";
+            break;	      
+
+       case Unit::TON :
+            cd="ton";
             break;
+	    	      
+        case Unit::HOUR :
+            cd="hour";
+            break;
+		    
+        case Unit::MIN :
+            cd="min";
+            break;
+		    
+        case Unit::SEC :
+            cd="sec";
+            break;	
     }
-    return os << pn.num << "[" << str << "]";
+    return os << p1.number << "[" << cd << "]";
     }
 
 
-istream& ariel::operator>>(istream& is, PhysicalNumber& pn) {
+
+
+istream& ariel::operator>>(istream& is, PhysicalNumber& c) {
     string input;
-
-// remember place for rewinding
 std::ios::pos_type startPosition = is.tellg();
-
 is >> input;
-
-Unit new_type; // Answers
-double new_Value; // Ansers
-
-int f_index = input.find('[');
-int l_index = input.find(']');
-
-if(f_index == -1 || l_index == -1 || f_index >= l_index) 
+Unit type; 
+double Value; 
+int first=input.find('[');
+int last=input.find(']');
+if(first==-1 || last==-1 || first>=last) 
 {
-    auto errorState = is.rdstate(); // remember error state
-    is.clear(); // clear error so seekg will work
-    is.seekg(startPosition); // rewind
-    is.clear(errorState); // set back the error flag
+    auto errorState=is.rdstate();
+    is.clear();
+    is.seekg(startPosition);
+    is.clear(errorState);
     return is;
 }
-
-std::string numbers = input.substr(0,f_index);
-std::string s_type = input.substr(f_index+1,l_index - f_index - 1 );
-
+std::string _values=input.substr(0,first);
+std::string _type=input.substr(first+1,last-first-1);
 try
 {
-    new_Value = stod(numbers);   
+   Value=stod(_values);   
 }
-catch(std::exception& e)
+catch(std::exception& pn)
 {
-    auto errorState = is.rdstate(); // remember error state
-    is.clear(); // clear error so seekg will work
-    is.seekg(startPosition); // rewind
-    is.clear(errorState); // set back the error flag
+    auto errorState = is.rdstate(); 
+    is.clear();
+    is.seekg(startPosition); 
+    is.clear(errorState);
     return is;
 }
-
-if( s_type.compare("km") == 0 ) new_type = Unit::KM; 
-else if( s_type.compare("m") == 0 ) new_type = Unit::M; 
-else if( s_type.compare("cm") == 0 ) new_type = Unit::CM; 
-
-else if( s_type.compare("ton") == 0 ) new_type = Unit::TON; 
-else if( s_type.compare("kg") == 0 ) new_type = Unit::KG; 
-else if( s_type.compare("g") == 0 ) new_type = Unit::G; 
-
-else if( s_type.compare("hour") == 0 ) new_type = Unit::HOUR; 
-else if( s_type.compare("min") == 0 ) new_type = Unit::MIN; 
-else if( s_type.compare("sec") == 0 ) new_type = Unit::SEC;
-else {
-    auto errorState = is.rdstate(); // remember error state
-    is.clear(); // clear error so seekg will work
-    is.seekg(startPosition); // rewind
-    is.clear(errorState); // set back the error flag
+if(_type.compare("km")==0) type=Unit::KM; 
+else if(type.compare("m")==0) type=Unit::M; 
+else if(type.compare("cm")==0) type=Unit::CM; 
+else if(type.compare("ton")==0) type=Unit::TON; 
+else if(type.compare("kg")==0) type=Unit::KG; 
+else if(type.compare("g")==0) type=Unit::G; 
+else if(type.compare("hour")==0) type=Unit::HOUR; 
+else if(type.compare("min")==0) type=Unit::MIN; 
+else if(type.compare("sec")==0) type=Unit::SEC;
+else 
+{
+    auto errorState=is.rdstate(); 
+    is.clear(); 
+    is.seekg(startPosition);
+    is.clear(errorState);
     return is;
 }
-
-pn.u = new_type;
-pn.num = new_Value;
+p1._x=type;
+p1.number=Value;
 return is;
-
 }
 
-//private functions:
 
-//checking if the given units are from the same "family" [mass,time,lenght]
- bool PhysicalNumber::sameUnit(const PhysicalNumber& other){ 
-     //first family unit
-     if((other.u >=0 && other.u<=2) && (this->u >=0 && this->u<=2)){
-       
+
+
+     // private func
+  
+ bool PhysicalNumber::unit2(const PhysicalNumber& a)
+ { 
+     if((a._x>=0 && a._x<=2) && (this->_x>=0 && this->_x<=2)) //First
+     {  
          return true;
      }
-     //second family unit
-        else if((other.u >=3 && other.u<=5) && (this->u >=3 && this->u<=5)){
-        
-                return true;
+  
+     else if((a._x>=3 && a._x<=5) && (this->_x>=3 && this->_x<=5)) //Second
+     {
+          return true;
      }
-     //third family unit
-                else if((other.u >=6 && other.u<=8) && (this->u >=6 && this->u<=8)){
-        
-                         return true;
+   
+     else if((a._x>=6 && a._x<=8) && (this->_x>=6 && this->_x<=8)) //Third
+     {
+         return true;
      }
      else return false;
 }
 
-//checking if the given Physical Numbers can be convert
-double PhysicalNumber::unit_Converter(PhysicalNumber& left,PhysicalNumber& right)const{
-      if(left.sameUnit(right)==false) {
-          throw runtime_error("not the same family unit can not convert1");
+
+
+double PhysicalNumber::unit_Converter(PhysicalNumber& left,PhysicalNumber& right)const //Option to convert
+{
+      if(left.unit2(right)==false)
+      {
+          throw runtime_error("Can not convert");
       }
-      else{
-           switch (left.u){
+      else
+      {
+           switch (left._x)
+	   {
             case KM:
-            switch(right.u){ 
+			   
+           switch(right._x)
+	   { 
                 case KM:
-                return right.num;
+                return right.number;
                 break;               
                
                 case M:
-                return right.num/1000;
+                return right.number/1000;
                 break;
                 
                 case CM:
-                return right.num/100000;
+                return right.number/100000;
                 break;
                
                 default:
-                throw runtime_error("not the same family unit can not convert2");
+                throw runtime_error("Can not convert");
             }
-            break;
-            case M:
-            switch(right.u){
-                
+                break;
                 case M:
-                return right.num;
+            switch(right._x)
+	    {    
+                case M:
+                return right.number;
                 break;  
 
                 case KM:
-                return right.num*1000;
+                return right.number*1000;
                 break;
                 
                 case CM:
-                return right.num/100;
+                return right.number/100;
                 break;
               
                 default:
-               throw runtime_error("not the same family unit can not convert3");
-                
+               throw runtime_error("Can not convert");
             }
-            break;            
-            case CM:
-            switch(right.u){
-                
+               break;            
+               case CM:
+            switch(right._x)
+	    {    
                 case CM:
-                return right.num;
+                return right.number;
                 break;  
 
                 case KM:
-                return right.num*100000;
+                return right.number*100000;
                 break;
                 
                 case M:
-                return right.num*100;
+                return right.number*100;
                 break;
 
                 default:
-                throw runtime_error("not the same family unit can not convert4");
+                throw runtime_error("Can not convert");
             }
-            break;
+                break;
+                case HOUR:
+            switch(right._x)
+	    { 
+                case HOUR:
+                return right.number;
+                break;  
+               
+                case MIN:
+                return right.number/60;
+                break;
+                
+                case SEC:
+                return right.number/3600;
+                break;
+               
+                default:
+                throw runtime_error("Can not convert");
+            }
+                break;
+                case MIN:
+            switch(right._x)
+	    {    
+                case MIN:
+                return right.number;
+                break;  
+               
+                case HOUR:
+                return right.number*60;
+                break;
+                
+                case SEC:
+                return right.number/60;
+                break;
+               
+                default:
+                throw runtime_error("Can not convert");
+            }
+                break;
+                case SEC:
+            switch(right._x)
+	    {    
+                case SEC:
+                return right.number;
+                break;  
+                
+                case HOUR:
+                return right.number*3600;
+                break;
+                
+                case MIN:
+                return right.number*60;
+                break;
+                
+                default:
+               throw runtime_error("Can not convert");
+            }
+               break;
+               case TON:
+            switch(right._x)
+	    {
+                case TON:
+                return right.number;
+                break;  
+               
+                case KG:
+                return right.number/1000;
+                break;
+                
+                case G:
+                return right.number/1000000;
+                break;
 
-            case HOUR:
-            switch(right.u){
-                
-                case HOUR:
-                return right.num;
-                break;  
-               
-                case MIN:
-                return right.num/60;
-                break;
-                
-                case SEC:
-                return right.num/3600;
-                break;
-               
                 default:
-                throw runtime_error("not the same family unit can not convert5");
+                throw runtime_error("Can not convert");
             }
-            break;
-            case MIN:
-            switch(right.u){
-                
-                case MIN:
-                return right.num;
-                break;  
-               
-                case HOUR:
-                return right.num*60;
                 break;
-                
-                case SEC:
-                return right.num/60;
-                break;
-               
-                default:
-                throw runtime_error("not the same family unit can not convert6");
-            }
-            break;
-            case SEC:
-            switch(right.u){
-                
-                case SEC:
-                return right.num;
-                break;  
-                
-                case HOUR:
-                return right.num*3600;
-                break;
-                
-                case MIN:
-                return right.num*60;
-                break;
-                
-                default:
-               throw runtime_error("not the same family unit can not convert7");
-            }
-            break;
-            case TON:
-            switch(right.u){
-               
-                case TON:
-                return right.num;
-                break;  
-               
                 case KG:
-                return right.num/1000;
-                break;
-                
-                case G:
-                return right.num/1000000;
-                break;
-
-                default:
-                throw runtime_error("not the same family unit can not convert8");
-            }
-            break;
-            case KG:
-            switch(right.u){
-                
+            switch(right._x)
+	    {  
                 case KG:
-                return right.num;
+                return right.number;
                 break;  
                 
                 case TON:
-                return right.num*1000;
+                return right.number*1000;
                 break;
                 
                 case G:
-                return right.num/1000;
+                return right.number/1000;
                 break;
                 
                 default:
-                throw runtime_error("not the same family unit can not convert9");
+                throw runtime_error("Can not convert");
             }
-            break; 
-            case G:
-            switch(right.u){
-                
+                break; 
                 case G:
-                return right.num;
+            switch(right._x)
+	    {
+                case G:
+                return right.number;
                 break;  
                 
                 case KG:
-                return right.num*1000;
+                return right.number*1000;
                 break;
                 
                 case TON:
-                return right.num*1000000;
+                return right.number*1000000;
                 break;
                
                 default:
-                throw runtime_error("not the same family unit can not convert10");
+                throw runtime_error("Can not convert");
             }
             break;
         }   
-    }
+        }
 }
      
