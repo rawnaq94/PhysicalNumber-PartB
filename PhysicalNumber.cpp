@@ -349,7 +349,7 @@ return is;
 
 
 
-double PhysicalNumber::unit_Converter(PhysicalNumber& left,PhysicalNumber& right)const //Option to convert
+double PhysicalNumber::conversion(PhysicalNumber& left,PhysicalNumber& right)const //Option to convert
 {
       if(left.unit2(right)==false)
       {
