@@ -39,12 +39,13 @@ namespace ariel
       
 	    // check equal by boolean operator
 
+        bool operator== (const PhysicalNumber& a) ;
+        bool operator!= (const PhysicalNumber& a) ;    
         bool operator> (const PhysicalNumber& a) ;
         bool operator< (const PhysicalNumber& a) ;
         bool operator>= (const PhysicalNumber& a) ;
         bool operator<= (const PhysicalNumber& a) ;
-        bool operator== (const PhysicalNumber& a) ;
-        bool operator!= (const PhysicalNumber& a) ;
+       
 	    
 	    
 	     // promotion and subtraction operator
